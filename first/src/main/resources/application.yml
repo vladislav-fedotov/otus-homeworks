@@ -1,0 +1,2 @@
+application:
+  quizz-file-path: ./first/src/main/resources/quizz.csv
