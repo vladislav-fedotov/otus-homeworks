@@ -1,8 +1,8 @@
-package otus.homework.second.service
+package otus.homework.first.service
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.stereotype.Service
-import otus.homework.second.model.toQuizzResult
+import otus.homework.first.model.toQuizzResult
 
 @Service
 @ConfigurationProperties(prefix = "application")

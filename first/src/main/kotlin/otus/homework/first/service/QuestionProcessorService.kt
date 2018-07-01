@@ -1,8 +1,8 @@
-package otus.homework.second.service
+package otus.homework.first.service
 
 import org.springframework.stereotype.Service
-import otus.homework.second.model.Question
-import otus.homework.second.model.QuestionResult
+import otus.homework.first.model.Question
+import otus.homework.first.model.QuestionResult
 
 @Service
 class QuestionProcessorService {

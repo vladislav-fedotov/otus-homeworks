@@ -1,7 +1,7 @@
-package otus.homework.second.service
+package otus.homework.first.service
 
 import org.springframework.stereotype.Service
-import otus.homework.second.model.Question
+import otus.homework.first.model.Question
 import java.io.File
 import java.io.FileNotFoundException
 

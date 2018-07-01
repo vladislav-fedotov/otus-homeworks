@@ -1,19 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-
-    <groupId>otus.homework</groupId>
-    <artifactId>first</artifactId>
-    <version>1.0.0</version>
-	<name>First Homework</name>
-    <packaging>jar</packaging>
-
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <groupId>ru.otus</groupId>
-        <artifactId>homeworks</artifactId>
-        <version>1.0.0</version>
+        <artifactId>homework</artifactId>
+        <groupId>otus.spring</groupId>
+        <version>0.0.1-SNAPSHOT</version>
     </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>first</artifactId>
 
     <dependencies>
         <dependency>
@@ -47,8 +43,17 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
             <plugin>
-                <artifactId>kotlin-maven-plugin</artifactId>
                 <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
                 <configuration>
                     <args>
                         <arg>-Xjsr305=strict</arg>

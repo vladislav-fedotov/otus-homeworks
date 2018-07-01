@@ -1,4 +1,4 @@
-package otus.homework.second.model
+package otus.homework.first.model
 
 data class Question(val question: String, val expectedAnswer: String) {
     fun printQuestion() {

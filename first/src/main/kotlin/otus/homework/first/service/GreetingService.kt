@@ -1,11 +1,11 @@
-package otus.homework.second.service
+package otus.homework.first.service
 
 import org.springframework.stereotype.Service
 
 @Service
 class GreetingService {
     fun greeting() {
-        print("\n------ Please enter your second name and second name separated by space ------\n>")
+        print("\n------ Please enter your first name and first name separated by space ------\n>")
         val (firstName, lastName) = readUserFirstAndLastName()
         println("Hi $firstName $lastName!")
     }
