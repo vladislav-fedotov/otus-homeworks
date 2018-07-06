@@ -1,7 +1,7 @@
 package otus.homework.second.service
 
 import arrow.core.Try
-import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.logging.LogLevel.INFO
 import org.springframework.context.MessageSource
 import org.springframework.context.NoSuchMessageException
@@ -11,10 +11,11 @@ import ru.tinkoff.eclair.annotation.Log
 import java.util.*
 
 @Service
+@ConfigurationProperties(prefix = "spring.mvc")
 class QuestionReaderService(
-        private val messageSource: MessageSource,
-        @Value("\${spring.mvc.locale}") private val locale: Locale
+        private val messageSource: MessageSource
 ) {
+    lateinit var locale:Locale
     @Log(INFO)
     fun readQuestions(): Try<List<Question>> = Try {
         (1..5).map {
