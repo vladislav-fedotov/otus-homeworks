@@ -9,7 +9,7 @@
     <modules>
         <module>first</module>
         <module>second</module>
-        <module>third</module>
+        <module>fourth</module>
     </modules>
     <packaging>pom</packaging>
 
