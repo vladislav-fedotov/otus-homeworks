@@ -1,11 +1,11 @@
-package otus.homework.second.service
+package otus.homework.fourth.service
 
 import arrow.core.Try
 import arrow.core.getOrElse
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.MessageSource
 import org.springframework.stereotype.Service
-import otus.homework.second.util.measure
+import otus.homework.fourth.util.measure
 import java.util.*
 
 @Service
@@ -21,7 +21,7 @@ class GreetingService(
             )
             val userFirstAndLastName = readUserFirstAndLastName()
             val salute = Try { messageSource.getMessage("greeting.hi", locale) }
-                    .getOrElse { "Bonjour" }
+                    .getOrElse { "Default greeting" }
             printSaluteWithUserName(userFirstAndLastName, salute)
         }
     }

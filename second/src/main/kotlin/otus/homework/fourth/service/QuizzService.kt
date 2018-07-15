@@ -1,11 +1,11 @@
-package otus.homework.second.service
+package otus.homework.fourth.service
 
 import org.springframework.boot.logging.LogLevel.INFO
 import org.springframework.stereotype.Service
-import otus.homework.second.model.Question
-import otus.homework.second.model.QuestionResult
-import otus.homework.second.model.QuizzResult
-import otus.homework.second.model.toQuizzResult
+import otus.homework.fourth.model.Question
+import otus.homework.fourth.model.QuestionResult
+import otus.homework.fourth.model.QuizzResult
+import otus.homework.fourth.model.toQuizzResult
 import ru.tinkoff.eclair.annotation.Log
 import ru.tinkoff.eclair.logger.ManualLogger
 import java.io.FileNotFoundException
