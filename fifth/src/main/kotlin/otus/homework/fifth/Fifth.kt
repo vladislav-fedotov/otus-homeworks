@@ -1,20 +1,14 @@
-package otus.homework.second
+package otus.homework.fifth
 
-import org.springframework.boot.CommandLineRunner
+import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.context.support.ReloadableResourceBundleMessageSource
-import otus.homework.sixth.service.QuizzService
+import otus.homework.fifth.service.QuizzService
 
 
 @SpringBootApplication
-class Second {
-    @Bean
-    fun run(quizzService: QuizzService) = CommandLineRunner {
-        quizzService.startQuizz()
-    }
-
+class Fourth {
     @Bean
     fun messageSource() =
             ReloadableResourceBundleMessageSource().apply {
@@ -24,5 +18,6 @@ class Second {
 }
 
 fun main(args: Array<String>) {
-    runApplication<Second>(*args)
+    val ctx = SpringApplication.run(Fourth::class.java)
+    ctx.getBean(QuizzService::class.java).startQuizz()
 }

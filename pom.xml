@@ -10,6 +10,8 @@
         <module>first</module>
         <module>second</module>
         <module>fourth</module>
+        <module>fifth</module>
+        <module>sixth</module>
     </modules>
     <packaging>pom</packaging>
 
