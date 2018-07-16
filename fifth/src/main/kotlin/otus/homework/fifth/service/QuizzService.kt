@@ -1,5 +1,6 @@
 package otus.homework.fifth.service
 
+import arrow.core.Try
 import org.springframework.boot.logging.LogLevel.INFO
 import org.springframework.stereotype.Service
 import otus.homework.fifth.model.Question
@@ -7,41 +8,29 @@ import otus.homework.fifth.model.QuestionResult
 import otus.homework.fifth.model.QuizzResult
 import otus.homework.fifth.model.toQuizzResult
 import ru.tinkoff.eclair.annotation.Log
-import ru.tinkoff.eclair.logger.ManualLogger
-import java.io.FileNotFoundException
 
 
 @Service
 class QuizzService(
-        val greetingsService: GreetingService,
-        val questionsReaderService: QuestionReaderService,
-        val log: ManualLogger
+        val questionsReaderService: QuestionReaderService
 ) {
     @Log(INFO)
-    fun startQuizz() =
-            greetingsService.greeting().also {
-                questionsReaderService.readQuestions()
-                        .fold({ throwable ->
-                            when (throwable) {
-                                is FileNotFoundException -> log.error("File with questions was not found!")
-                                else -> log.error(throwable.toString())
-                            }
-                        })
-                        { questions ->
-                            questions
-                                    .map { question ->
-                                        printQuestion(question).let {
-                                            QuestionResult(
-                                                    question = question.question,
-                                                    expectedAnswer = question.answer,
-                                                    actualAnswer = readAnswer()
-                                            )
-                                        }
+    fun startQuizz(): Try<QuizzResult> =
+            questionsReaderService.readQuestions()
+                    .map { questions ->
+                        questions
+                                .map { question ->
+                                    printQuestion(question).let {
+                                        QuestionResult(
+                                                question = question.question,
+                                                expectedAnswer = question.answer,
+                                                actualAnswer = readAnswer()
+                                        )
                                     }
-                                    .toQuizzResult()
-                                    .also { showResults(it) }
-                        }
-            }
+                                }
+                                .also { println("For test results, type use 'result' command") }
+                                .toQuizzResult()
+                    }
 
     internal fun printQuestion(question: Question) {
         println(question.question)
