@@ -3,6 +3,8 @@ package otus.homework.sixth.service
 import com.nhaarman.mockitokotlin2.*
 import org.junit.jupiter.api.Test
 import org.springframework.context.NoSuchMessageException
+import otus.homework.fourth.service.GreetingService
+import otus.homework.fourth.service.getMessage
 import java.util.*
 
 

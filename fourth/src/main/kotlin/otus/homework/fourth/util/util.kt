@@ -1,4 +1,4 @@
-package otus.homework.fifth.util
+package otus.homework.fourth.util
 
 import ru.tinkoff.eclair.logger.SimpleLogger
 import kotlin.system.measureTimeMillis

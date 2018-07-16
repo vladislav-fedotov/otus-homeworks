@@ -1,4 +1,4 @@
-package otus.homework.sixth.service
+package otus.homework.fourth.service
 
 import arrow.core.Try
 import org.springframework.beans.factory.annotation.Value
@@ -6,8 +6,8 @@ import org.springframework.boot.logging.LogLevel.INFO
 import org.springframework.context.MessageSource
 import org.springframework.context.NoSuchMessageException
 import org.springframework.stereotype.Service
-import otus.homework.fifth.model.Question
-import otus.homework.fifth.util.measure
+import otus.homework.fourth.model.Question
+import otus.homework.fourth.util.measure
 import ru.tinkoff.eclair.annotation.Log
 import java.util.*
 

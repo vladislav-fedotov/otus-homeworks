@@ -1,10 +1,10 @@
-package otus.homework.fifth
+package otus.homework.fourth
 
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.context.support.ReloadableResourceBundleMessageSource
-import otus.homework.sixth.service.QuizzService
+import otus.homework.fourth.service.QuizzService
 
 
 @SpringBootApplication
