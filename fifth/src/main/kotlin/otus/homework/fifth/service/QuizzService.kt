@@ -38,12 +38,4 @@ class QuizzService(
     }
 
     internal fun readAnswer() = readLine() ?: ""
-
-    internal fun showResults(quizzResult: QuizzResult) {
-        println("------------------------------- Quizz Results --------------------------------")
-        println("Asked ${quizzResult.numberOfQuestions} questions")
-        println("Correctly answered: ${quizzResult.answeredCorrectly}")
-        println("Incorrectly answered: ${quizzResult.answeredIncorrectly}")
-        println()
-    }
 }
