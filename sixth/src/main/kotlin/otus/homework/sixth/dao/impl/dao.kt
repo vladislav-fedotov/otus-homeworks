@@ -86,14 +86,14 @@ class BookDaoJdbc(
                 book.publisher
         )
 
-        val bookWithId: Book = this.findEntity(book)!!
-
-        jdbc.update(
-                "INSERT INTO BOOK_AUTHOR VALUES (?, ?)",
-                bookWithId.id,
-                author.id
-        )
-        return bookWithId
+//        val bookWithId: Book = this.findEntity(book)!!
+//
+//        jdbc.update(
+//                "INSERT INTO BOOK_AUTHOR VALUES (?, ?)",
+//                bookWithId.id,
+//                author.id
+//        )
+        return book
     }
 
     override fun findById(id: Int): Book? =
@@ -172,7 +172,7 @@ class AuthorDaoJdbc(
 
     override fun save(author: Author): Author =
             jdbc.update(
-                    "INSERT INTO AUTHOR VALUES (?, ?, ?)",
+                    "INSERT INTO AUTHOR (FIRST_NAME, FAMILY_NAME) VALUES (?, ?)",
                     author.firstName,
                     author.familyName
             ).let { this.findByFirstNameAndFamilyName(author)!! }
