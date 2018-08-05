@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.context.support.ReloadableResourceBundleMessageSource
-import otus.homework.sixth.service.QuizzService
+import otus.homework.second.service.QuizzService
 
 
 @SpringBootApplication

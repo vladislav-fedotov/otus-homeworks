@@ -1,4 +1,4 @@
-package otus.homework.sixth.service
+package otus.homework.second.service
 
 
 class QuestionReaderServiceTest {

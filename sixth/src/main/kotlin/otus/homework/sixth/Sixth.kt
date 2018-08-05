@@ -39,6 +39,7 @@ fun main(args: Array<String>) {
     val authorDao = context.getBean(AuthorDao::class.java)
     authorDao.save(Author(firstName = "Lewis ", familyName = "Carroll"))
     println(authorDao.findAll())
+    println(bookDao.findAll())
 
 
 //    Console.main(*args)

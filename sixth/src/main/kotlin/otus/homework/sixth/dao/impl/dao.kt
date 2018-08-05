@@ -1,5 +1,6 @@
 package otus.homework.sixth.dao.impl
 
+import arrow.core.Try
 import org.springframework.jdbc.core.JdbcOperations
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.stereotype.Repository
@@ -11,6 +12,8 @@ import otus.homework.sixth.model.Book
 import otus.homework.sixth.model.Genre
 import java.io.Serializable
 import java.sql.ResultSet
+import org.springframework.jdbc.support.GeneratedKeyHolder
+
 
 @Repository
 class BookDaoJdbc(
@@ -74,26 +77,27 @@ class BookDaoJdbc(
         val author = authorDao.findByFirstNameAndFamilyName(book.author) ?: authorDao.save(book.author)
         val genre = genreDao.findByNameAndCode(book.genre) ?: genreDao.save(book.genre)
 
+        val keyHolder = GeneratedKeyHolder()
         jdbc.update(
-                """INSERT INTO BOOK
-                    (GENRE_ID, TITLE, ISBN, PUBLICATION_YEAR, NUMBER_OF_PAGES, PUBLISHER)
-                    VALUES (?, ?, ?, ?, ?, ?)""",
-                genre.id,
-                book.title,
-                book.isbn,
-                book.publicationYear,
-                book.numberOfPages,
-                book.publisher
+                {
+                    it.prepareStatement("INSERT INTO BOOK (GENRE_ID, TITLE, ISBN, PUBLICATION_YEAR, NUMBER_OF_PAGES, PUBLISHER) VALUES (?, ?, ?, ?, ?, ?)", arrayOf("ID")).apply {
+                        setInt(1, genre.id!!)
+                        setString(2, book.title)
+                        setString(3, book.isbn)
+                        setInt(4, book.publicationYear)
+                        setInt(5, book.numberOfPages)
+                        setString(6, book.publisher)
+                    }
+                },
+                keyHolder
         )
-
-        val bookWithId: Book = this.findEntity(book)!!
 
         jdbc.update(
                 "INSERT INTO BOOK_AUTHOR VALUES (?, ?)",
-                bookWithId.id,
+                keyHolder.key,
                 author.id
         )
-        return bookWithId
+        return book.apply { id = keyHolder.key!!.toInt() }
     }
 
     override fun findById(id: Int): Book? =
@@ -105,8 +109,10 @@ class BookDaoJdbc(
                     b.PUBLICATION_YEAR,
                     b.ISBN,
                     b.PUBLISHER,
+                    g.ID AS GENRE_ID,
                     g.NAME AS GENRE_NAME,
                     g.CODE AS GENRE_CODE,
+                    a.ID AS AUTHOR_ID,
                     a.FIRST_NAME,
                     a.FAMILY_NAME
                 FROM
@@ -130,8 +136,10 @@ class BookDaoJdbc(
                     b.PUBLICATION_YEAR,
                     b.ISBN,
                     b.PUBLISHER,
+                    g.ID AS GENRE_ID,
                     g.NAME AS GENRE_NAME,
                     g.CODE AS GENRE_CODE,
+                    a.ID AS AUTHOR_ID,
                     a.FIRST_NAME,
                     a.FAMILY_NAME
                 FROM
@@ -149,13 +157,13 @@ class BookMapper : RowMapper<Book>, Serializable {
     override fun mapRow(rs: ResultSet, rowNum: Int): Book? = with(rs) {
         Book(
                 id = getInt("ID"),
-                genre = Genre(name = getString("GENRE_NAME"), code = getString("GENRE_CODE")),
+                genre = Genre(id = getInt("GENRE_ID"), name = getString("GENRE_NAME"), code = getString("GENRE_CODE")),
                 title = getString("TITLE"),
                 isbn = getString("ISBN"),
                 publicationYear = getInt("PUBLICATION_YEAR"),
                 numberOfPages = getInt("NUMBER_OF_PAGES"),
                 publisher = getString("PUBLISHER"),
-                author = Author(firstName = getString("FIRST_NAME"), familyName = getString("FAMILY_NAME"))
+                author = Author(id = getInt("AUTHOR_ID"), firstName = getString("FIRST_NAME"), familyName = getString("FAMILY_NAME"))
         )
     }
 }
@@ -165,7 +173,11 @@ class AuthorDaoJdbc(
         private val jdbc: JdbcOperations
 ) : AuthorDao {
     override fun findByFirstNameAndFamilyName(author: Author): Author? =
-            jdbc.queryForObject("SELECT * FROM AUTHOR WHERE FIRST_NAME = ? AND FAMILY_NAME = ?", arrayOf(author.firstName, author.familyName), AuthorMapper())
+            Try {
+                jdbc.queryForObject(
+                        "SELECT * FROM AUTHOR WHERE FIRST_NAME = ? AND FAMILY_NAME = ?",
+                        arrayOf(author.firstName, author.familyName), AuthorMapper())
+            }.fold({ null }, { println("author found"); author })
 
     override fun count() =
             jdbc.queryForObject("SELECT COUNT(*) FROM AUTHOR", Long::class.java) ?: 0
@@ -175,7 +187,7 @@ class AuthorDaoJdbc(
                     "INSERT INTO AUTHOR (FIRST_NAME, FAMILY_NAME) VALUES (?, ?)",
                     author.firstName,
                     author.familyName
-            ).let { this.findByFirstNameAndFamilyName(author)!! }
+            ).also { println("save author") }.let { this.findByFirstNameAndFamilyName(author)!! }
 
 
     override fun findById(id: Int): Author? =
@@ -199,7 +211,11 @@ class GenreDaoJdbc(
         private val jdbc: JdbcOperations
 ) : GenreDao {
     override fun findByNameAndCode(genre: Genre): Genre? =
-            jdbc.queryForObject("SELECT * FROM GENRE WHERE NAME = ? AND CODE = ?", arrayOf(genre.name, genre.code), GenreMapper())
+            Try {
+                jdbc.queryForObject(
+                        "SELECT * FROM GENRE WHERE NAME = ? AND CODE = ?",
+                        arrayOf(genre.name, genre.code), GenreMapper())
+            }.fold({ null }, { genre })
 
     override fun count() =
             jdbc.queryForObject("SELECT COUNT(*) FROM GENRE", Long::class.java) ?: 0

@@ -15,7 +15,7 @@ data class Genre(
 ) : Serializable
 
 data class Book(
-        val id: Int? = null,
+        var id: Int? = 0,
         val genre: Genre,
         val title: String,
         val isbn: String,

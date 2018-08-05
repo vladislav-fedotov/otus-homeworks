@@ -1,4 +1,4 @@
-package otus.homework.sixth.service
+package otus.homework.second.service
 
 import arrow.core.Try
 import com.nhaarman.mockitokotlin2.doReturn
@@ -6,9 +6,9 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.spy
 import com.nhaarman.mockitokotlin2.verify
 import org.junit.jupiter.api.Test
-import otus.homework.fifth.model.Question
-import otus.homework.fifth.model.QuestionResult
-import otus.homework.fifth.model.QuizzResult
+import otus.homework.second.model.Question
+import otus.homework.second.model.QuestionResult
+import otus.homework.second.model.QuizzResult
 
 
 class QuizzServiceTest {
