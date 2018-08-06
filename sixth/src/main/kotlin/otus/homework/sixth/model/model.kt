@@ -3,19 +3,19 @@ package otus.homework.sixth.model
 import java.io.Serializable
 
 data class Author(
-        val id: Int? = null,
+        val id: Int = 0,
         val firstName: String,
         val familyName: String
 ) : Serializable
 
 data class Genre(
-        val id: Int? = null,
+        val id: Int = 0,
         val name: String,
         val code: String
 ) : Serializable
 
 data class Book(
-        var id: Int? = 0,
+        val id: Int = 0,
         val genre: Genre,
         val title: String,
         val isbn: String,

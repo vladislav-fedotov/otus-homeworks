@@ -3,12 +3,7 @@ package otus.homework.sixth
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.context.TestConfiguration
-import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
-import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import otus.homework.sixth.dao.AuthorDao
 import otus.homework.sixth.dao.BookDao
@@ -16,16 +11,15 @@ import otus.homework.sixth.dao.GenreDao
 import otus.homework.sixth.model.Author
 import otus.homework.sixth.model.Book
 import otus.homework.sixth.model.Genre
-import org.springframework.jdbc.core.JdbcTemplate
-import org.springframework.test.context.ContextConfiguration
-import javax.sql.DataSource
+import java.util.*
+import kotlin.test.assertEquals
+import kotlin.test.assertNotEquals
+import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 
 
+@SpringBootTest
 @ExtendWith(SpringExtension::class)
-@DataJpaTest
-//@SpringBootTest
-//@ActiveProfiles("test")
-@ContextConfiguration(classes = [(TestConfiguration::class)])
 class DaoTest {
 
     @Autowired
@@ -38,15 +32,15 @@ class DaoTest {
     lateinit var genreDao: GenreDao
 
     @Test
-    fun test() {
-        bookDao.save(
+    fun whenSaveBook_idShouldSet() {
+        val book = bookDao.save(
                 Book(
                         genre = Genre(
                                 name = "g",
                                 code = "G"
                         ),
                         title = "T t",
-                        isbn = "ab-cd",
+                        isbn = "ab-cd-${Random().nextInt().toChar()}",
                         publicationYear = 2018,
                         numberOfPages = 5,
                         publisher = "Pub",
@@ -56,13 +50,175 @@ class DaoTest {
                         )
                 )
         )
-    }
-}
 
-@Configuration
-class TestConfig {
-    @Bean
-    fun getJdbcTemplate(dataSource: DataSource): JdbcTemplate {
-        return JdbcTemplate(dataSource)
+        assertNotEquals(0, book.id)
+    }
+
+    @Test
+    fun whenFindAllBooks_allBooksShouldReturned() {
+        bookDao.save(
+                Book(
+                        genre = Genre(
+                                name = "g",
+                                code = "G"
+                        ),
+                        title = "T t",
+                        isbn = "ab-cd-${Random().nextInt().toChar()}",
+                        publicationYear = 2018,
+                        numberOfPages = 5,
+                        publisher = "Pub",
+                        author = Author(
+                                firstName = "Fi",
+                                familyName = "Fa"
+                        )
+                )
+        )
+
+        val books = bookDao.findAll()
+
+        assertTrue(books.isNotEmpty())
+    }
+
+    @Test
+    fun whenFindBookById_andBookExists_bookShouldReturned() {
+        val book = bookDao.save(
+                Book(
+                        genre = Genre(
+                                name = "g",
+                                code = "G"
+                        ),
+                        title = "T t",
+                        isbn = "ab-cd-${Random().nextInt().toChar()}",
+                        publicationYear = 2018,
+                        numberOfPages = 5,
+                        publisher = "Pub",
+                        author = Author(
+                                firstName = "Fi",
+                                familyName = "Fa"
+                        )
+                )
+        )
+
+        val foundByIdBook = bookDao.findById(book.id)
+
+        assertNotNull(foundByIdBook)
+        assertEquals(foundByIdBook!!.id, book.id)
+        assertEquals(foundByIdBook.title, book.title)
+    }
+
+    @Test
+    fun whenSaveBook_authorDaoShouldFindAuthor() {
+        val book = bookDao.save(
+                Book(
+                        genre = Genre(
+                                name = "g",
+                                code = "G"
+                        ),
+                        title = "T t",
+                        isbn = "ab-cd-${Random().nextInt().toChar()}",
+                        publicationYear = 2018,
+                        numberOfPages = 5,
+                        publisher = "Pub",
+                        author = Author(
+                                firstName = "Fi",
+                                familyName = "Fa"
+                        )
+                )
+        )
+
+        val author = authorDao.findById(book.author.id)
+
+        assertNotNull(author)
+        assertEquals("Fi", author!!.firstName)
+        assertEquals("Fa", author.familyName)
+    }
+
+    @Test
+    fun whenSaveBook_genreDaoShouldFindAuthor() {
+        val book = bookDao.save(
+                Book(
+                        genre = Genre(
+                                name = "g",
+                                code = "G"
+                        ),
+                        title = "T t",
+                        isbn = "ab-cd-${Random().nextInt().toChar()}",
+                        publicationYear = 2018,
+                        numberOfPages = 5,
+                        publisher = "Pub",
+                        author = Author(
+                                firstName = "Fi",
+                                familyName = "Fa"
+                        )
+                )
+        )
+
+        val genre = genreDao.findById(book.genre.id)
+
+        assertNotNull(genre)
+        assertEquals("G", genre!!.code)
+        assertEquals("g", genre.name)
+    }
+
+    @Test
+    fun whenAuthorAlreadyExist_itShouldBeAddedWithBook() {
+        val author = authorDao.save(
+                Author(
+                        firstName = "Hey",
+                        familyName = "Ho"
+                )
+        )
+
+        val authorsNumberBeforeSave = authorDao.count()
+
+        bookDao.save(
+                Book(
+                        genre = Genre(
+                                name = "g",
+                                code = "G"
+                        ),
+                        title = "T t",
+                        isbn = "ab-cd-${Random().nextInt().toChar()}",
+                        publicationYear = 2018,
+                        numberOfPages = 5,
+                        publisher = "Pub",
+                        author = author
+                )
+        )
+
+        val authorsNumberAfterSave = authorDao.count()
+
+        assertEquals(authorsNumberBeforeSave, authorsNumberAfterSave)
+    }
+
+    @Test
+    fun whenGenreAlreadyExist_itShouldBeAddedWithBook() {
+        val genre = genreDao.save(
+                Genre(
+                        name = "let",
+                        code = "LET"
+                )
+        )
+
+        val genresNumberBeforeSave = genreDao.count()
+
+        bookDao.save(
+                Book(
+                        genre = genre,
+                        title = "T t",
+                        isbn = "ab-cd-${Random().nextInt().toChar()}",
+                        publicationYear = 2018,
+                        numberOfPages = 5,
+                        publisher = "Pub",
+                        author = Author(
+                                firstName = "Fi",
+                                familyName = "Fa"
+                        )
+                )
+        )
+
+        val genresNumberAfterSave = genreDao.count()
+
+        assertEquals(genresNumberBeforeSave, genresNumberAfterSave)
     }
 }

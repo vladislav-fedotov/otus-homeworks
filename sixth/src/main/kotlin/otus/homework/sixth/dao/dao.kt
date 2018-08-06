@@ -9,7 +9,6 @@ interface BookDao {
     fun save(book: Book): Book
     fun findById(id: Int): Book?
     fun findAll(): List<Book>
-    fun findEntity(book: Book): Book?
 }
 
 interface AuthorDao {
@@ -17,7 +16,7 @@ interface AuthorDao {
     fun save(author: Author): Author
     fun findById(id: Int): Author?
     fun findAll(): List<Author>
-    fun findByFirstNameAndFamilyName(author: Author): Author?
+    fun findByEntity(author: Author): Author?
 }
 
 interface GenreDao {
@@ -25,5 +24,5 @@ interface GenreDao {
     fun save(genre: Genre): Genre
     fun findById(id: Int): Genre?
     fun findAll(): List<Genre>
-    fun findByNameAndCode(genre: Genre): Genre?
+    fun findByEntity(genre: Genre): Genre?
 }
