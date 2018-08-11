@@ -1,4 +1,4 @@
-package otus.homework.sixth.service
+package otus.homework.fourth.service
 
 import arrow.core.Try
 import com.nhaarman.mockitokotlin2.*
@@ -14,9 +14,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 import otus.homework.fourth.model.Question
 import otus.homework.fourth.model.QuestionResult
 import otus.homework.fourth.model.QuizzResult
-import otus.homework.fourth.service.GreetingService
-import otus.homework.fourth.service.QuestionReaderService
-import otus.homework.fourth.service.QuizzService
 import ru.tinkoff.eclair.logger.ManualLogger
 import java.io.FileNotFoundException
 

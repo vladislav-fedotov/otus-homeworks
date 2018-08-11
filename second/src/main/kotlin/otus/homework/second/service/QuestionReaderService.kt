@@ -1,4 +1,4 @@
-package otus.homework.sixth.service
+package otus.homework.second.service
 
 import arrow.core.Try
 import org.springframework.boot.context.properties.ConfigurationProperties
@@ -6,7 +6,7 @@ import org.springframework.boot.logging.LogLevel.INFO
 import org.springframework.context.MessageSource
 import org.springframework.context.NoSuchMessageException
 import org.springframework.stereotype.Service
-import otus.homework.fifth.model.Question
+import otus.homework.second.model.Question
 import ru.tinkoff.eclair.annotation.Log
 import java.util.*
 

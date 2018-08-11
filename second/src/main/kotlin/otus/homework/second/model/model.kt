@@ -1,4 +1,4 @@
-package otus.homework.fifth.model
+package otus.homework.second.model
 
 data class Question(val question: String, val answer: String)
 

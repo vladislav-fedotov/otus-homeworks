@@ -1,4 +1,4 @@
-package otus.homework.sixth.service
+package otus.homework.second.service
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.MessageSource
