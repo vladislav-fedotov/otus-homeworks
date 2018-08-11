@@ -3,7 +3,10 @@ package otus.homework.sixth.dao.impl
 import arrow.core.Try
 import org.springframework.jdbc.core.JdbcOperations
 import org.springframework.jdbc.core.RowMapper
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.jdbc.support.GeneratedKeyHolder
+import org.springframework.stereotype.Component
 import org.springframework.stereotype.Repository
 import otus.homework.sixth.dao.AuthorDao
 import otus.homework.sixth.dao.BookDao
@@ -18,8 +21,10 @@ import java.sql.ResultSet
 @Repository
 class BookDaoJdbc(
         private val jdbc: JdbcOperations,
+        private val jdbcTemplate: NamedParameterJdbcTemplate,
         private val authorDao: AuthorDao,
-        private val genreDao: GenreDao
+        private val genreDao: GenreDao,
+        private val bookMapper: BookMapper
 ) : BookDao {
     override fun count() =
             jdbc.queryForObject("SELECT COUNT(*) FROM BOOK", Long::class.java) ?: 0
@@ -29,19 +34,21 @@ class BookDaoJdbc(
         val genre = genreDao.findByEntity(book.genre) ?: genreDao.save(book.genre)
 
         val keyHolder = GeneratedKeyHolder()
-        jdbc.update(
-                {
-                    it.prepareStatement("INSERT INTO BOOK (GENRE_ID, TITLE, ISBN, PUBLICATION_YEAR, NUMBER_OF_PAGES, PUBLISHER) VALUES (?, ?, ?, ?, ?, ?)", arrayOf("ID")).apply {
-                        setInt(1, genre.id)
-                        setString(2, book.title)
-                        setString(3, book.isbn)
-                        setInt(4, book.publicationYear)
-                        setInt(5, book.numberOfPages)
-                        setString(6, book.publisher)
-                    }
-                },
-                keyHolder
-        )
+
+        val sql = "INSERT INTO BOOK " +
+                "(GENRE_ID, TITLE, ISBN, PUBLICATION_YEAR, NUMBER_OF_PAGES, PUBLISHER)" +
+                " VALUES (:genreId, :title, :isbn, :publicationYear, :numberOfPages, :publisher)"
+
+        val params = MapSqlParameterSource().apply {
+            addValue("genreId" ,  genre.id)
+            addValue("title" ,  book.title)
+            addValue("isbn" ,  book.isbn)
+            addValue("publicationYear" ,  book.publicationYear)
+            addValue("numberOfPages" ,  book.numberOfPages)
+            addValue("publisher" ,  book.publisher)
+        }
+
+        jdbcTemplate.update(sql, params, keyHolder)
 
         jdbc.update(
                 "INSERT INTO BOOK_AUTHOR VALUES (?, ?)",
@@ -81,7 +88,7 @@ class BookDaoJdbc(
                     AUTHOR a ON a.ID = b_a.AUTHOR_ID
                 WHERE
                     b.ID = ?
-                """, arrayOf(id), BookMapper())
+                """, arrayOf(id), bookMapper)
             }.fold({ null }, { it })
 
     override fun findAll(): List<Book> =
@@ -107,9 +114,10 @@ class BookDaoJdbc(
                     BOOK_AUTHOR b_a ON b_a.BOOK_ID = b.ID
                 INNER JOIN
                     AUTHOR a ON a.ID = b_a.AUTHOR_ID
-                """, BookMapper())
+                """, bookMapper)
 }
 
+@Component
 class BookMapper : RowMapper<Book>, Serializable {
     override fun mapRow(rs: ResultSet, rowNum: Int): Book? = with(rs) {
         Book(
@@ -127,16 +135,16 @@ class BookMapper : RowMapper<Book>, Serializable {
 
 @Repository
 class AuthorDaoJdbc(
-        private val jdbc: JdbcOperations
+        private val jdbc: JdbcOperations,
+        private val authorMapper: AuthorMapper
 ) : AuthorDao {
     override fun findByEntity(author: Author): Author? =
             Try {
-                println("select author")
                 jdbc.queryForObject(
                         "SELECT * FROM AUTHOR WHERE FIRST_NAME = ? AND FAMILY_NAME = ?",
-                        arrayOf(author.firstName, author.familyName), AuthorMapper())
+                        arrayOf(author.firstName, author.familyName), authorMapper)
             }
-                    .fold({ null }, { println("found author");it })
+                    .fold({ null }, { it })
 
     override fun count() =
             jdbc.queryForObject("SELECT COUNT(*) FROM AUTHOR", Long::class.java) ?: 0
@@ -155,13 +163,14 @@ class AuthorDaoJdbc(
 
     override fun findById(id: Int): Author? =
             Try {
-                jdbc.queryForObject("SELECT * FROM AUTHOR WHERE ID = ?", arrayOf(id), AuthorMapper())
+                jdbc.queryForObject("SELECT * FROM AUTHOR WHERE ID = ?", arrayOf(id), authorMapper)
             }.fold({ null }, { it })
 
     override fun findAll(): List<Author> =
-            jdbc.query("SELECT * FROM AUTHOR", AuthorMapper())
+            jdbc.query("SELECT * FROM AUTHOR", authorMapper)
 }
 
+@Component
 class AuthorMapper : RowMapper<Author> {
     override fun mapRow(rs: ResultSet, rowNum: Int): Author? =
             Author(
@@ -173,13 +182,15 @@ class AuthorMapper : RowMapper<Author> {
 
 @Repository
 class GenreDaoJdbc(
-        private val jdbc: JdbcOperations
+        private val jdbc: JdbcOperations,
+        private val genreMapper: GenreMapper
+
 ) : GenreDao {
     override fun findByEntity(genre: Genre): Genre? =
             Try {
                 jdbc.queryForObject(
                         "SELECT * FROM GENRE WHERE NAME = ? AND CODE = ?",
-                        arrayOf(genre.name, genre.code), GenreMapper())
+                        arrayOf(genre.name, genre.code), genreMapper)
             }.fold({ null }, { it })
 
     override fun count() =
@@ -199,13 +210,14 @@ class GenreDaoJdbc(
 
     override fun findById(id: Int): Genre? =
             Try {
-                jdbc.queryForObject("SELECT * FROM GENRE WHERE ID = ?", arrayOf(id), GenreMapper())
+                jdbc.queryForObject("SELECT * FROM GENRE WHERE ID = ?", arrayOf(id), genreMapper)
             }.fold({ null }, { it })
 
     override fun findAll(): List<Genre> =
-            jdbc.query("SELECT * FROM GENRE", GenreMapper())
+            jdbc.query("SELECT * FROM GENRE", genreMapper)
 }
 
+@Component
 class GenreMapper : RowMapper<Genre> {
     override fun mapRow(rs: ResultSet, rowNum: Int): Genre? =
             Genre(
