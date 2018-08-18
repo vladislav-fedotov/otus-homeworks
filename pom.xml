@@ -12,6 +12,7 @@
         <module>fourth</module>
         <module>fifth</module>
         <module>sixth</module>
+        <module>twelfth</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -29,7 +30,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
-        <kotlin.version>1.2.50</kotlin.version>
+        <kotlin.version>1.2.60</kotlin.version>
         <spring-boot.version>2.0.3.RELEASE</spring-boot.version>
     </properties>
 
@@ -45,12 +46,39 @@
                 <artifactId>kotlin-reflect</artifactId>
                 <version>${kotlin.version}</version>
             </dependency>
+
             <dependency>
-                <groupId>org.jetbrains.kotlin</groupId>
-                <artifactId>kotlin-test-junit5</artifactId>
-                <version>${kotlin.version}</version>
+                <groupId>org.springframework.shell</groupId>
+                <artifactId>spring-shell-starter</artifactId>
+                <version>2.0.1.RELEASE</version>
+            </dependency>
+
+            <dependency>
+                <groupId>ru.tinkoff</groupId>
+                <artifactId>eclair-spring-boot-starter</artifactId>
+                <version>0.8.3</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.arrow-kt</groupId>
+                <artifactId>arrow-core</artifactId>
+                <version>0.7.2</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.h2database</groupId>
+                <artifactId>h2</artifactId>
+                <version>1.4.197</version>
+            </dependency>
+
+            <!-- Dependencies Required for Tests -->
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-all</artifactId>
+                <version>2.0.2-beta</version>
                 <scope>test</scope>
             </dependency>
+
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-test</artifactId>
@@ -63,38 +91,28 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-            <dependency>
-                <groupId>org.springframework.shell</groupId>
-                <artifactId>spring-shell-starter</artifactId>
-                <version>2.0.1.RELEASE</version>
-            </dependency>
 
             <dependency>
-                <groupId>org.mockito</groupId>
-                <artifactId>mockito-all</artifactId>
-                <version>2.0.2-beta</version>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-test-junit5</artifactId>
+                <version>${kotlin.version}</version>
                 <scope>test</scope>
             </dependency>
+
             <dependency>
                 <groupId>com.nhaarman.mockitokotlin2</groupId>
                 <artifactId>mockito-kotlin</artifactId>
                 <version>2.0.0-RC1</version>
+                <scope>test</scope>
             </dependency>
+
             <dependency>
-                <groupId>ru.tinkoff</groupId>
-                <artifactId>eclair-spring-boot-starter</artifactId>
-                <version>0.8.3</version>
+                <groupId>de.flapdoodle.embed</groupId>
+                <artifactId>de.flapdoodle.embed.mongo</artifactId>
+                <version>2.1.1</version>
+                <scope>test</scope>
             </dependency>
-            <dependency>
-                <groupId>io.arrow-kt</groupId>
-                <artifactId>arrow-core</artifactId>
-                <version>0.7.2</version>
-            </dependency>
-            <dependency>
-                <groupId>com.h2database</groupId>
-                <artifactId>h2</artifactId>
-                <version>1.4.197</version>
-            </dependency>
+
         </dependencies>
     </dependencyManagement>
 </project>
